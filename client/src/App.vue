@@ -12,7 +12,8 @@
   <p>apppuuusser</p>
   <img src="./assets/logo.png"/>
   <!--AppUser imageurl="5.jpg" username="Keith"/-->
-<Bug assignedurl="5.jpg" assignedName="Keith"/>
+<!--Bug assignedurl="5.jpg" assignedName="Keith"/-->
+<AssetContainer/>
 <router-link to="/about">About</router-link>
 <router-link to="/login">Login</router-link>
 <router-view></router-view> 
@@ -30,7 +31,8 @@ import Nav from './components/common/navbar.vue'
 import Slots from  './components/slots.vue'
 import AllUsers from './components/private/AllUsers.vue'
 //import AppUser from './components/AppUser.vue'
-import Bug from './components/private/Bug.vue'
+//import Bug from './components/private/Bug.vue'
+import AssetContainer from './components/private/AssetContainer.vue'
 
 export default {
   name: 'App',
@@ -40,7 +42,8 @@ export default {
     Slots,
     AllUsers,
    // AppUser
-   Bug
+   //Bug
+   AssetContainer
   },
   attrs:{
     src:require('./assets/logo.png')

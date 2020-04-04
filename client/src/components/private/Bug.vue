@@ -1,7 +1,7 @@
 <template>
   <div>    
-  <h1>{{assignedurl}}</h1>
-    <AppUser :imageurl="assignedurl" :username="assignedName"/> 
+  <h1>{{bug.assignedurl}}</h1>
+    <AppUser :imageurl="bug.assignedurl" :username="bug.assignedName"/> 
 <select v-model="priority">
  <option :value="null">Select...</option>
  <option value="critical">critical</option>
@@ -10,7 +10,7 @@
  <option value="low">low</option>
             <option value="5">Other</option>
 </select>    
-
+<button @click="activate(bug)">click</button>
   </div>  
 </template>
 
@@ -26,9 +26,15 @@ return {
 components:{
     AppUser
 },
-props: {
-  assignedurl:String,//5.jpg
-  assignedName:String  
+props: {bug:Object
+  //id:Number,
+  //assignedurl:String,//5.jpg
+  //assignedName:String  
+},
+methods: {
+  activate(bug) {
+  this.$emit('update-container',bug)
+    }
 }
 }
 </script>
