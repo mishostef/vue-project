@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>{{username}}</h2>
-    <img :src="url" alt="userImg"> 
+    <img :src="url" height ="42" alt="userImg"> 
   </div>  
 </template>
 
