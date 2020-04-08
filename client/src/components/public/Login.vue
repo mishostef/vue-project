@@ -4,7 +4,7 @@
             <div class="form-group row">
             <label for="username" class="col-sm-2 col-form-label">Username</label>
             <div class="col-sm-4">
-                <input id="username" v-model="username" @blur="$v.username.$touch" class="form-control" />
+                <input id="username" v-model="username" name ="username" @blur="$v.username.$touch" class="form-control" />
             </div>
             <div class="col-sm-6"></div>
             <template v-if="$v.username.$error">
@@ -15,7 +15,7 @@
             <div class="form-group row">
             <label for="password" class="col-sm-2 col-form-label">Password</label>
             <div class="col-sm-4">
-                <input id="password" type="password" v-model="password" @blur="$v.password.$touch" class="form-control"/>
+                <input id="password" type="password" name="password" v-model="password" @blur="$v.password.$touch" class="form-control"/>
             </div>
             <div class="col-sm-6"></div>
             <template v-if="$v.password.$error">
@@ -23,7 +23,7 @@
                 <div v-if="!$v.password.minLength">Password should be more than 8 symboils!</div>
             </template>
             </div>
-            
+            <button type="submit" class="btn btn-primary" v-on:click="submitHandler">submit</button>
         </form>  
     </div>
 </template>
@@ -31,6 +31,8 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, minLength } from 'vuelidate/lib/validators';
+const axios = require('axios').default;
+const auth = require('../mixins/auth.js').default;
 
 export default {
 mixins: [validationMixin],
@@ -52,8 +54,17 @@ mixins: [validationMixin],
   },
   methods: {
     submitHandler() {
-      this.$v.$touch();
+       const { username, password } = this;
+     this.$v.$touch();
       if (this.$v.$invalid) { return; }
+      axios.post('http://localhost:8083/api/users',{username, password}).then(res=>{
+        if(res.status!==200&&res.status!==201){
+          console.error("errrrrr");
+          return;
+        }
+         auth.setUser(res.data);
+        this.$router.push('/about');
+      })
       console.log('Form was submitted!');
     }
   }

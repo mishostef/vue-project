@@ -1,25 +1,31 @@
 var express = require("express");
 var bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 
 var USERS_COLLECTION = "users";
 
-var cors = require('cors');
-
 var app = express();
-app.use(bodyParser.json());
-
+var cors = require('cors');
 app.use(cors({
-    //origin: 'http://localhost:8080',
-    credentials: true
-  }));
+  origin: 'http://localhost:8080',
+  credentials: true
+}));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+app.use(bodyParser.json());
+app.use(cookieParser());
+
 
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
 var db;
 
 // Connect to the database before starting the application server.
-mongodb.MongoClient.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/test", function (err, client) {
+mongodb.MongoClient.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/test",
+{useUnifiedTopology: true}, function (err, client) {
   if (err) {
     console.log(err);
     process.exit(1);
@@ -52,3 +58,23 @@ app.get("/api/users", function(req, res) {
       }
     });
   });
+
+  app.post("/api/users", function(req, res) {
+    var newUser = req.body;
+  console.log("new user is"+JSON.stringify(newUser))
+    console.log('new user in server: ');
+    newUser.createDate = new Date();
+  
+    if (!req.body.username) {
+      handleError(res, "Invalid user input", "Must provide a name.", 400);
+    } else {
+      db.collection(USERS_COLLECTION).insertOne(newUser, function(err, doc) {
+        if (err) {
+          handleError(res, err.message, "Failed to create new contact.");
+        } else {
+          res.status(201).json(doc.ops[0]);
+        }
+      });
+    }
+  });
+  
